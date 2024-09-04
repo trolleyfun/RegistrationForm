@@ -3,6 +3,9 @@ ob_start();
 include "includes/db.php";
 include "includes/functions.php";
 session_start();
+
+/* User Logout */
+userLogout();
 ?>
 <!DOCTYPE html>
 <html lang="ru">

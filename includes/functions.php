@@ -199,7 +199,7 @@ function userRegistration() {
     include "includes/registration_form.php";
 }
 
-/* Display Login Form and check if login data is correct. If data is correct, then start user session */
+/* Display Login Form and check if login data is correct. If data is correct, then start user session. You should create html structure of Login Form in "includes/login_form.php" */
 function userLogin() {
     global $connection;
 
@@ -261,5 +261,17 @@ function userLogin() {
     }
 
     include "includes/login_form.php";
+}
+
+/* Unset session variables and logout user */
+function userLogout() {
+    if (isset($_GET['logout'])) {
+        $logout = $_GET['logout'];
+        if ($logout == "true") {
+            session_unset();
+        }
+
+        header("Location: index.php");
+    }
 }
 ?>
