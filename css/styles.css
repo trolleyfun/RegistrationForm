@@ -79,7 +79,7 @@ nav {
     margin-top: 5px;
     padding: 0 15px;
 }
-.input-error {
+.error {
     color: var(--text-error);
 }
 .form-btn {

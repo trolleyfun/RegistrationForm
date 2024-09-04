@@ -8,10 +8,17 @@ function validateQuery($result) {
     }
 }
 
-/* Echo text from $message if $status is true. If $status is false, nothing occurs*/
-function displayMessage($status, $message) {
+/* Display text of $message as error if $status is true. If $status is false, nothing occurs. You should create html structure of message in "includes/input_invalid.php" */
+function displayErrorMessage($status, $message) {
     if ($status) {
-        echo $message;
+        include "includes/input_invalid.php";
+    }
+}
+
+/* Display text of $message as description if $status is true. If $status is false, nothing occurs. You should create html structure of message in "includes/input_description.php" */
+function displayDescriptionMessage($status, $message) {
+    if ($status) {
+        include "includes/input_description.php";
     }
 }
 
