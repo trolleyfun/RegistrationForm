@@ -26,13 +26,7 @@ session_start();
     <div class="container">
         <!-- Login Section -->
         <section id="login">
-            <h1>Вход</h1>
-            <form action="" method="post" class="form-container">
-                <input type="text" name="phone_email" placeholder="Номер телефона или e-mail" class="form-input" required>
-                <span class="input-description">Формат: +79991234567</span>
-                <input type="password" name="password" placeholder="Пароль" class="form-input" required>
-                <button type="submit" name="login_btn" class="form-btn">Войти</button>
-            </form>
+            <?php userLogin(); ?>
         </section>
         <!-- /#login -->
     </div>

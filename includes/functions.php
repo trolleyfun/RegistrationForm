@@ -149,6 +149,7 @@ function userRegistration() {
     /* input data validation: false -> valid, true -> invalid */
     $err_user_reg = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false, 'password_empty'=>false, 'password_equal'=>false];
 
+    /* Registration button is clicked */
     if (isset($_POST['signup_btn'])) {
         /* Get data from the form */
         $user['login'] = $_POST['login'];
@@ -196,5 +197,69 @@ function userRegistration() {
 
     /* Display Registration Form */
     include "includes/registration_form.php";
+}
+
+/* Display Login Form and check if login data is correct. If data is correct, then start user session */
+function userLogin() {
+    global $connection;
+
+    /* input data validation: false -> valid, true -> invalid */
+    $err_login = ['phone_email'=>false, 'password'=>false];
+    $err_authorization = false;
+
+    /* Login button is clicked */
+    if (isset($_POST['login_btn'])) {
+        /* Get data from the form */
+        $login['phone_email'] = $_POST['phone_email'];
+        $login['password'] = $_POST['password'];
+
+        /* Escape special characters (for sql queries) */
+        $login = escapeArray($login);
+
+        /* Input data validation */
+        foreach($err_login as $key=>$value) {
+            $err_login[$key] = false;
+        }
+        $err_authorization = false;
+        $err_login['phone_email'] = empty($login['phone_email']);
+        $err_login['password'] = empty($login['password']);
+        $err_result = false;
+        foreach($err_login as $err_item) {
+            $err_result = $err_result || $err_item;
+        }
+    
+        /* Check login data if input data is valid */
+        if (!$err_result) {
+            /* Search for user in database */
+            $query = "SELECT * FROM users WHERE user_phone = '{$login['phone_email']}' OR user_email = '{$login['phone_email']}';";
+            $userLogin = mysqli_query($connection, $query);
+            validateQuery($userLogin);
+            $err_authorization = true;
+            if ($row = mysqli_fetch_assoc($userLogin)) {
+                /* Get user info from database */
+                $user_id = $row['user_id'];
+                $user_login = $row['user_login'];
+                $user_phone = $row['user_phone'];
+                $user_email = $row['user_email'];
+                $user_password = $row['user_password'];
+                
+                /* Login data validation */
+                if (($login['phone_email'] === $user_phone || $login['phone_email'] === $user_email) && password_verify($login['password'], $user_password)) {
+                    /* Start session if there is no active session */
+                    if (session_status() !== PHP_SESSION_ACTIVE) {
+                        session_start();
+                    }
+
+                    /* Set session variables */
+                    $_SESSION['user_id'] = $user_id;
+                    $err_authorization = false;
+
+                    header("Location: profile.php");
+                }
+            }
+        }
+    }
+
+    include "includes/login_form.php";
 }
 ?>
