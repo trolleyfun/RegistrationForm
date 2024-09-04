@@ -26,8 +26,22 @@ session_start();
     <div class="container">
         <!-- Registration Section -->
         <section id="registration">
-            <h1>Регистрация</h1>
-            <?php userRegistration(); ?>
+            <?php 
+            if (isset($_GET['source'])) {
+                $source = $_GET['source'];
+            } else {
+                $source = "";
+            }
+
+            switch($source) {
+                case "info":
+                    displayInfo("Регистрация прошла успешно");
+                    break;
+                default:
+                    userRegistration(); 
+                    break;
+            }
+            ?>
         </section>
         <!-- /#registration -->
     </div>

@@ -22,6 +22,11 @@ function displayDescriptionMessage($status, $message) {
     }
 }
 
+/* Display $text on the page. You should create html structure of text in "includes/info_message.php" */
+function displayInfo($text) {
+    include "includes/info_message.php";
+}
+
 /* Escape special characters in array elements for using in sql queries */
 function escapeArray($array) {
     global $connection;
@@ -185,7 +190,7 @@ function userRegistration() {
             validateQuery($userReg);
 
             /* Redirect to Login Page */
-            header("Location: index.php");
+            header("Location: registration.php?source=info");
         }
     }
 

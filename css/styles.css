@@ -75,12 +75,15 @@ nav {
     margin-top: 15px;
 }
 .input-description {
-    font-weight: 10px;
+    font-size: 0.9em;
     margin-top: 5px;
     padding: 0 15px;
 }
 .error {
     color: var(--text-error);
+}
+.info-msg {
+    font-size: 1.5em;
 }
 .form-btn {
     background-color: var(--btn-color);
