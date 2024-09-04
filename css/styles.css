@@ -1,0 +1,99 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --background-color: #ffffff;
+    --elements-color: #000000;
+    --text-color: #ffffff;
+    --btn-color: #14b43c;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow-x: hidden;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: var(--text-color);
+}
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+/* Navigation */
+nav {
+    background-color: var(--elements-color);
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 15px 30px;
+}
+
+.navlinks {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+}
+.navlinks a {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* Main Section */
+#login, #registration, #edit-profile, #edit-password {
+    background-color: var(--elements-color);
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 30px;
+    border-radius: 10px;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 15px;
+    margin-top: 20px;
+}
+.form-input {
+    padding: 7px 15px;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    width: 100%;
+}
+.form-btn {
+    background-color: var(--btn-color);
+    color: var(--text-color);
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px 30px;
+    width: 100%;
+    cursor: pointer;
+}
+
+/* For mobile devices */
+@media only screen and (max-width: 750px) {
+    .container {
+        width: 90%;
+    }
+
+    nav {
+        justify-content: center;
+    }
+} 
