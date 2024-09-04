@@ -254,7 +254,7 @@ function userLogin() {
                     $_SESSION['user_id'] = $user_id;
                     $err_authorization = false;
 
-                    header("Location: profile.php");
+                    header("Location: index.php");
                 }
             }
         }

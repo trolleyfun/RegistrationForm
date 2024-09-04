@@ -3,6 +3,11 @@ ob_start();
 include "includes/db.php";
 include "includes/functions.php";
 session_start();
+
+/* This page is only for authorized users */
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -16,11 +21,14 @@ session_start();
 </head>
 <body>
     <nav>
-        <ul class="navlinks">
-            <li><a href="index.php">Вход</a></li>
-            <li><a href="registration.php">Регистрация</a></li>
-            <li><a href="profile.php">Профиль</a></li>
-        </ul>
+        <?php 
+        /* Check if user is authorized and display proper navigation */
+        if (isset($_SESSION['user_id'])) {
+            include "includes/nav_authorized.php";
+        } else {
+            include "includes/nav_not_authorized.php";
+        }
+        ?>
     </nav>
 
     <div class="container">

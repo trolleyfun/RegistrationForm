@@ -16,17 +16,27 @@ session_start();
 </head>
 <body>
     <nav>
-        <ul class="navlinks">
-            <li><a href="index.php">Вход</a></li>
-            <li><a href="registration.php">Регистрация</a></li>
-            <li><a href="profile.php">Профиль</a></li>
-        </ul>
+        <?php 
+        /* Check if user is authorized and display proper navigation */
+        if (isset($_SESSION['user_id'])) {
+            include "includes/nav_authorized.php";
+        } else {
+            include "includes/nav_not_authorized.php";
+        }
+        ?>
     </nav>
 
     <div class="container">
         <!-- Login Section -->
         <section id="login">
-            <?php userLogin(); ?>
+            <?php 
+            /* Check if user is authorized and display proper content */
+            if (isset($_SESSION['user_id'])) {
+                displayInfo("Добро пожаловать!");
+            } else {
+                userLogin(); 
+            }
+            ?>
         </section>
         <!-- /#login -->
     </div>
