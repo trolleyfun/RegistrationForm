@@ -22,7 +22,8 @@
         <section id="login">
             <h1>Вход</h1>
             <form action="" method="post" class="form-container">
-                <input type="text" name="login" placeholder="Логин" class="form-input" required>
+                <input type="text" name="login" placeholder="Номер телефона или e-mail" class="form-input" required>
+                <span class="input-description">Формат: +79991234567</span>
                 <input type="password" name="password" placeholder="Пароль" class="form-input" required>
                 <button type="submit" name="login_btn" class="form-btn">Войти</button>
             </form>

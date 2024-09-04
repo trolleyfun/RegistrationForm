@@ -77,6 +77,10 @@ nav {
 .input-description {
     font-weight: 10px;
     margin-top: 5px;
+    padding: 0 15px;
+}
+.input-error {
+    color: var(--text-error);
 }
 .form-btn {
     background-color: var(--btn-color);
