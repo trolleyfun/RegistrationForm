@@ -9,6 +9,7 @@
     --elements-color: #000000;
     --text-color: #ffffff;
     --btn-color: #14b43c;
+    --text-error: #f81212;
 }
 
 body {
@@ -63,8 +64,7 @@ nav {
     flex-direction: column;
     justify-content: center;
     align-items: start;
-    gap: 15px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .form-input {
     padding: 7px 15px;
@@ -72,6 +72,11 @@ nav {
     outline: none;
     border-radius: 5px;
     width: 100%;
+    margin-top: 15px;
+}
+.input-description {
+    font-weight: 10px;
+    margin-top: 5px;
 }
 .form-btn {
     background-color: var(--btn-color);
@@ -85,6 +90,7 @@ nav {
     padding: 10px 30px;
     width: 100%;
     cursor: pointer;
+    margin-top: 20px;
 }
 
 /* For mobile devices */

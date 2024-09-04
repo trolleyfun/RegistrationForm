@@ -23,7 +23,8 @@
             <h1>Регистрация</h1>
             <form action="" method="post" class="form-container">
                 <input type="text" name="name" placeholder="Имя" class="form-input" required>
-                <input type="tel" name="phone" placeholder="Телефон" class="form-input" required>
+                <input type="tel" pattern="\+7\d{10}" name="phone" placeholder="Телефон" class="form-input" required>
+                <span class="input-description">Формат: +79991234567</span>
                 <input type="email" name="email" placeholder="E-mail" class="form-input" required>
                 <input type="password" name="password_1" placeholder="Пароль" class="form-input" required>
                 <input type="password" name="password_2" placeholder="Повторите пароль" class="form-input" required>
