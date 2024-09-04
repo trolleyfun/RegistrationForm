@@ -129,4 +129,60 @@ function phoneValidation($phone) {
 function emailValidation($email) {
     return filter_var($email, FILTER_VALIDATE_EMAIL);
 }
+
+/* Display Registration Form and Add user to database if input data is valid. You should create html structure of Registration Form in "includes/registration_form.php" */
+function userRegistration() {
+    global $connection;
+
+    /* input data validation: false -> valid, true -> invalid */
+    $err_user_reg = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false, 'password_empty'=>false, 'password_equal'=>false];
+
+    if (isset($_POST['signup_btn'])) {
+        /* Get data from the form */
+        $user['login'] = $_POST['login'];
+        $user['phone'] = $_POST['phone'];
+        $user['email'] = $_POST['email'];
+        $user['password_1'] = $_POST['password_1'];
+        $user['password_2'] = $_POST['password_2'];
+
+        /* Escape special characters (for sql queries) */
+        $user = escapeArray($user);
+
+        /* Input data validation */
+        foreach($err_user_reg as $key=>$value) {
+            $err_user_reg[$key] = false;
+        }
+        $err_user_reg['login_empty'] = empty($user['login']);
+        $err_user_reg['login_used'] = !loginAvailable($user['login'], null);
+        $err_user_reg['phone_empty'] = empty($user['phone']);
+        $err_user_reg['phone_valid'] = !phoneValidation($user['phone']);
+        $err_user_reg['phone_used'] = !phoneAvailable($user['phone'], null);
+        $err_user_reg['email_empty'] = empty($user['email']);
+        $err_user_reg['email_valid'] = !emailValidation($user['email']);
+        $err_user_reg['email_used'] = !emailAvailable($user['email'], null);
+        $err_user_reg['password_empty'] = empty($user['password_1']);
+        $err_user_reg['password_equal'] = ($user['password_1'] !== $user['password_2']);
+        $err_result = false;
+        foreach($err_user_reg as $err_item) {
+            $err_result = $err_result || $err_item;
+        }
+
+        /* Add new user to database if input data is valid */
+        if (!$err_result) {
+            /* Password Hashing */
+            $user['password_1'] = password_hash($user['password_1'], PASSWORD_BCRYPT);
+
+            /* Query to database */
+            $query = "INSERT INTO users(user_login, user_phone, user_email, user_password) VALUES('{$user['login']}', '{$user['phone']}', '{$user['email']}', '{$user['password_1']}');";
+            $userReg = mysqli_query($connection, $query);
+            validateQuery($userReg);
+
+            /* Redirect to Login Page */
+            header("Location: index.php");
+        }
+    }
+
+    /* Display Registration Form */
+    include "includes/registration_form.php";
+}
 ?>
