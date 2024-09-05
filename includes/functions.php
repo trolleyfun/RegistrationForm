@@ -60,19 +60,27 @@ function loginAvailable($login, $user_id) {
 
     $user['user_id'] = $user_id;
     $user['login'] = $login;
+
+    /* If it is a new user then set id equal 0 (id = 0 doesn't exist in database) */
     if (is_null($user['user_id'])) {
         $user['user_id'] = 0;
     }
+    /* Escape special characters (for sql queries) */
     $user = escapeArray($user);
 
-    if (my_is_int($user['user_id'])) {
+    /* Validate user id */
+    if (!my_is_int($user['user_id'])) {
+        return false;
+    } else {
+        /*Search for user with $login in database */
         $query = "SELECT * FROM users WHERE user_login = '{$user['login']}' AND user_id != {$user['user_id']};";
         $loginExists = mysqli_query($connection, $query);
         validateQuery($loginExists);
+
+        /* Check if user with $login exists */
         $num_rows = mysqli_num_rows($loginExists);
+
         return $num_rows === 0;
-    } else {
-        return false;
     }
 }
 
@@ -82,20 +90,28 @@ function phoneAvailable($phone, $user_id) {
 
     $user['user_id'] = $user_id;
     $user['phone'] = $phone;
+
+    /* If it is a new user then set id equal 0 (id = 0 doesn't exist in database) */
     if (is_null($user['user_id'])) {
         $user['user_id'] = 0;
     }
+    /* Escape special characters (for sql queries) */
     $user = escapeArray($user);
 
-    if (my_is_int($user['user_id'])) {
+    /* Validate user id */
+    if (!my_is_int($user['user_id'])) {
+        return false;
+    } else {
+        /*Search for user with $phone in database */
         $query = "SELECT * FROM users WHERE user_phone = '{$user['phone']}' AND user_id != {$user['user_id']};";
         $phoneExists = mysqli_query($connection, $query);
         validateQuery($phoneExists);
+
+        /* Check if user with $phone exists */
         $num_rows = mysqli_num_rows($phoneExists);
+
         return $num_rows === 0;
-    } else {
-        return false;
-    }
+    } 
 }
 
 /* Check if e-mail is already used by another user. $user_id is ID of user who wants to set e-mail $email, put this parameter equal to null if that's a new user. Return true if e-mail isn't used and return false if e-mail is used */
@@ -104,38 +120,61 @@ function emailAvailable($email, $user_id) {
 
     $user['user_id'] = $user_id;
     $user['email'] = $email;
+
+    /* If it is a new user then set id equal 0 (id = 0 doesn't exist in database) */
     if (is_null($user['user_id'])) {
         $user['user_id'] = 0;
     }
+    /* Escape special characters (for sql queries) */
     $user = escapeArray($user);
 
-    if (my_is_int($user['user_id'])) {
+    /* Validate user id */
+    if (!my_is_int($user['user_id'])) {
+        return false;
+    } else {
+        /*Search for user with $email in database */
         $query = "SELECT * FROM users WHERE user_email = '{$user['email']}' AND user_id != {$user['user_id']};";
         $emailExists = mysqli_query($connection, $query);
         validateQuery($emailExists);
+
+        /* Check if user with $email exists */
         $num_rows = mysqli_num_rows($emailExists);
+
         return $num_rows === 0;
-    } else {
-        return false;
-    }
+    } 
 }
 
-/* Check if user with $user_id exists in database. Return true if user exists */
-function userIdValidation($user_id) {
+/* Check if session is active and if 'user_id' variable of session is set. Then check if user with the value of 'user_id' variable of session exists in database. On success return Id of user, otherwise return false */
+function sessionValidation() {
     global $connection;
 
-    $user_id_escaped = mysqli_real_escape_string($connection, $user_id);
-
-    if (my_is_int($user_id_escaped)) {
-        $query = "SELECT * FROM users WHERE user_id = {$user_id_escaped};";
-        $userValidation = mysqli_query($connection, $query);
-        validateQuery($userValidation);
-
-        $num_rows = mysqli_num_rows($userValidation);
-
-        return $num_rows > 0;
-    } else {
+    if (session_status() !== PHP_SESSION_ACTIVE) {
         return false;
+    } elseif (!isset($_SESSION['user_id'])) {
+        return false;
+    } else {
+        $user_id = $_SESSION['user_id'];
+        /* Escape special characters (for sql queries) */
+        $user_id = mysqli_real_escape_string($connection, $user_id);
+
+        /* Validate user id */
+        if (!my_is_int($user_id)) {
+            return false;
+        } else {
+            /*Search for user with $user_id in database */
+            $query = "SELECT user_id FROM users WHERE user_id = {$user_id};";
+            $sessionValidation = mysqli_query($connection, $query);
+            validateQuery($sessionValidation);
+    
+            /* Check if user with $user_id exists */
+            $num_rows = mysqli_num_rows($sessionValidation);
+    
+            if ($num_rows > 0) {
+                return $user_id;
+            } else {
+                return false;
+            }
+        }
     }
 }
 
@@ -290,6 +329,33 @@ function userLogout() {
 
         /* Redirect to Home Page */
         header("Location: index.php");
+    }
+}
+
+/* Display Edit Form for authorized user with id $user_id. Put data for this user from the database */
+function editProfile() {
+    global $connection;
+
+    if (!$user_id = sessionValidation()) {
+        header("Location: index.php?logout=true");
+    } else {
+        $user_id = mysqli_real_escape_string($connection, $user_id);
+        $query = "SELECT * FROM users WHERE user_id = {$user_id};";
+        $editProfile = mysqli_query($connection, $query);
+        validateQuery($editProfile);
+        if ($row = mysqli_fetch_assoc($editProfile)) {
+            $user_id = $row['user_id'];
+            $login = $row['user_login'];
+            $phone = $row['user_phone'];
+            $email = $row['user_email'];
+            $password = $row['user_password'];
+
+            $err_edit_profile = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false];
+            $err_change_password = ['current_password_empty'=>false, 'new_password_empty'=>false, 'new_password_equal'=>false];
+
+            include "includes/edit_profile.php";
+            include "includes/change_password.php";
+        }
     }
 }
 ?>

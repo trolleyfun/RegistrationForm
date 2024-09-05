@@ -52,7 +52,7 @@ nav {
 }
 
 /* Main Section */
-#login, #registration, #edit-profile, #edit-password {
+#login, #registration, #edit-profile, #edit-password, #info {
     background-color: var(--elements-color);
     max-width: 400px;
     margin: 60px auto;
@@ -108,5 +108,9 @@ nav {
 
     nav {
         justify-content: center;
+    }
+
+    #login, #registration, #edit-profile, #edit-password, #info {
+        margin: 40px auto;
     }
 } 

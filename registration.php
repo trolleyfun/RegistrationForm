@@ -32,11 +32,7 @@ if (isset($_SESSION['user_id'])) {
     </nav>
 
     <div class="container">
-        <!-- Registration Section -->
-        <section id="registration">
-            <?php userRegistration(); ?>
-        </section>
-        <!-- /#registration -->
+        <?php userRegistration(); ?>
     </div>
     <!-- /.container -->
 </body>

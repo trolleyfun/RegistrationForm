@@ -1,2 +1,6 @@
 <?php /* For function displayInfo() */ ?>
-<p class="info-msg"><?=$text;?></p>
+<!-- Info Message -->
+<section id="info">
+    <p class="info-msg"><?=$text;?></p>
+</section>
+<!-- /#info -->

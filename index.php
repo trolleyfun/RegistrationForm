@@ -29,19 +29,15 @@ userLogout();
         ?>
     </nav>
 
-    <div class="container">
-        <!-- Login Section -->
-        <section id="login">
-            <?php 
-            /* Check if user is authorized and display proper content */
-            if (isset($_SESSION['user_id'])) {
-                displayInfo("Добро пожаловать!");
-            } else {
-                userLogin(); 
-            }
-            ?>
-        </section>
-        <!-- /#login -->
+    <div class="container">  
+        <?php 
+        /* Check if user is authorized and display proper content */
+        if (isset($_SESSION['user_id'])) {
+            displayInfo("Добро пожаловать!");
+        } else {
+            userLogin(); 
+        }
+        ?>
     </div>
     <!-- /.container -->
 </body>
