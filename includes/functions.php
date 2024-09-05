@@ -47,6 +47,13 @@ function my_is_int($value) {
         return is_numeric($value) && ctype_digit($value);
 }
 
+/* Start session and, if session was successfully started, create and initialize 'user_id' variable of session */
+function my_session_start($user_id) {
+    if (session_start()) {
+        $_SESSION['user_id'] = $user_id;
+    }
+}
+
 /* Check if login is already used by another user. $user_id is ID of user who wants to set login $login, put this parameter equal to null if that's a new user. Return true if login isn't used and return false if login is used */
 function loginAvailable($login, $user_id) {
     global $connection;
@@ -190,8 +197,19 @@ function userRegistration() {
             $userReg = mysqli_query($connection, $query);
             validateQuery($userReg);
 
-            /* Redirect to Login Page */
-            header("Location: registration.php?source=info");
+            /* Get id of new user */
+            $query = "SELECT user_id FROM users WHERE user_login = '{$user['login']}';";
+            $userId = mysqli_query($connection, $query);
+            validateQuery($userId);
+            if ($row = mysqli_fetch_assoc($userId)) {
+                $user_id = $row['user_id'];
+
+                /* Initialize user session */
+                my_session_start($user_id);
+            }
+
+            /* Redirect to Home Page */
+            header("Location: index.php");
         }
     }
 
@@ -245,21 +263,20 @@ function userLogin() {
                 
                 /* Login data validation */
                 if (($login['phone_email'] === $user_phone || $login['phone_email'] === $user_email) && password_verify($login['password'], $user_password)) {
-                    /* Start session if there is no active session */
-                    if (session_status() !== PHP_SESSION_ACTIVE) {
-                        session_start();
-                    }
+                    
+                    /* Initialize user session */
+                    my_session_start($user_id);
 
-                    /* Set session variables */
-                    $_SESSION['user_id'] = $user_id;
                     $err_authorization = false;
 
+                    /* Redirect to Home Page */
                     header("Location: index.php");
                 }
             }
         }
     }
 
+    /* Display Login Form */
     include "includes/login_form.php";
 }
 
@@ -271,6 +288,7 @@ function userLogout() {
             session_unset();
         }
 
+        /* Redirect to Home Page */
         header("Location: index.php");
     }
 }

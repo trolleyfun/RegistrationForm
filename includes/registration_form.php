@@ -4,7 +4,7 @@
     <input type="text" name="login" placeholder="Логин" class="form-input" required>
     <?php displayErrorMessage($err_user_reg['login_empty'], "Это поле не может быть пустым"); ?>
     <?php displayErrorMessage($err_user_reg['login_used'], "Пользователь с таким логином уже существует. Выберите другой"); ?>
-    <input type="tel" pattern="\+7\d{10}" name="phone" placeholder="Номер телефона" class="form-input" required>
+    <input type="tel" pattern="\+7[0-9]{10}" name="phone" placeholder="Номер телефона" class="form-input" required>
     <?php displayDescriptionMessage(true, "Формат: +79991234567"); ?>
     <?php displayErrorMessage($err_user_reg['phone_empty'], "Это поле не может быть пустым"); ?>
     <?php displayErrorMessage($err_user_reg['phone_valid'], "Некорректный номер телефона"); ?>

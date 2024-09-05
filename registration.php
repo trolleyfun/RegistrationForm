@@ -34,24 +34,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="container">
         <!-- Registration Section -->
         <section id="registration">
-            <?php 
-            /* GET variable */
-            if (isset($_GET['source'])) {
-                $source = $_GET['source'];
-            } else {
-                $source = "";
-            }
-
-            /* Display content according to GET variable value */
-            switch($source) {
-                case "info":
-                    displayInfo("Регистрация прошла успешно");
-                    break;
-                default:
-                    userRegistration(); 
-                    break;
-            }
-            ?>
+            <?php userRegistration(); ?>
         </section>
         <!-- /#registration -->
     </div>

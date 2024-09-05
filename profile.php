@@ -37,7 +37,7 @@ if (!isset($_SESSION['user_id'])) {
             <h1>Редактировать профиль</h1>
             <form action="" method="post" class="form-container">
                 <input type="text" name="login" placeholder="Логин" class="form-input" required>
-                <input type="tel" pattern="\+7\d{10}" name="phone" placeholder="Номер телефона" class="form-input" required>
+                <input type="tel" pattern="\+7[0-9]{10}" name="phone" placeholder="Номер телефона" class="form-input" required>
                 <?php displayDescriptionMessage(true, "Формат: +79991234567"); ?>
                 <input type="email" name="email" placeholder="E-mail" class="form-input" required>
                 <button type="submit" name="edit_profile_btn" class="form-btn">Сохранить изменения</button>
