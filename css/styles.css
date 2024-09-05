@@ -10,6 +10,8 @@
     --text-color: #ffffff;
     --btn-color: #14b43c;
     --text-error: #f81212;
+    --info-background: #14b43c;
+    --info-border: #008000;
 }
 
 body {
@@ -54,14 +56,16 @@ nav {
 /* Main Section */
 #login, #registration, #edit-profile, #edit-password, #info {
     background-color: var(--elements-color);
+    border: none;
+    outline: none;
     max-width: 400px;
     margin: 60px auto;
     padding: 30px;
     border-radius: 10px;
 }
 #info {
-    background-color: #14b43c;
-    border: 4px solid #008000;
+    background-color: var(--info-background);
+    border: 4px solid var(--info-border);
     max-width: 600px;
 }
 .form-container {
