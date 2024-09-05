@@ -332,30 +332,97 @@ function userLogout() {
     }
 }
 
-/* Display Edit Form for authorized user with id $user_id. Put data for this user from the database */
+/* Display Edit Form and Change Password Form, and Put user data to Profile Edit Form from database. You should create html structure of Edit Profile Form in "includes/edit_profile.php" and Change Password Form in "includes/change_password.php" */
 function editProfile() {
     global $connection;
 
+    /* Check is session is active and session parameters are valid. If session validation failed then user logout */
     if (!$user_id = sessionValidation()) {
         header("Location: index.php?logout=true");
     } else {
+        /* Escape special characters (for sql queries) */
         $user_id = mysqli_real_escape_string($connection, $user_id);
+
+        /* Get user data from database */
         $query = "SELECT * FROM users WHERE user_id = {$user_id};";
         $editProfile = mysqli_query($connection, $query);
         validateQuery($editProfile);
-        if ($row = mysqli_fetch_assoc($editProfile)) {
+        if (!$row = mysqli_fetch_assoc($editProfile)) {
+            /* Logout if there are no users with such $user_id */
+            header("Location: index.php?logout=true");
+        } else {
             $user_id = $row['user_id'];
             $login = $row['user_login'];
             $phone = $row['user_phone'];
             $email = $row['user_email'];
             $password = $row['user_password'];
 
+            /* input data validation: false -> valid, true -> invalid */
             $err_edit_profile = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false];
             $err_change_password = ['current_password_empty'=>false, 'new_password_empty'=>false, 'new_password_equal'=>false];
 
+            /* Update user in database */
+            $err_edit_profile = updateProfile($user_id, $err_edit_profile);
+
+            /* Display Edit Profile Form and Change Password Form */
             include "includes/edit_profile.php";
             include "includes/change_password.php";
         }
     }
+}
+
+/* Get user data from the form and update user with $user_id in database. Make input data validation and set error status in $err_update_profile array. Return error status array */
+function updateProfile($user_id, $err_update_profile) {
+    global $connection;
+
+    /* Update Profile button is clicked */
+    if (isset($_POST['update_profile_btn'])) {
+        /* Check is session is active and session parameters are valid. If session validation failed then user logout */
+        if (!sessionValidation()) {
+            header("Location: index.php?logout=true");
+        } else {
+            /* Get data from the form */
+            $user['user_id'] = $user_id;
+            $user['login'] = $_POST['login'];
+            $user['phone'] = $_POST['phone'];
+            $user['email'] = $_POST['email'];
+
+            /* Escape special characters (for sql queries) */
+            $user = escapeArray($user);
+
+            /* Input data validation */
+            foreach($err_update_profile as $key=>$value) {
+                $err_update_profile[$key] = false;
+            }
+            $err_update_profile['login_empty'] = empty($user['login']);
+            $err_update_profile['login_used'] = !loginAvailable($user['login'], $user['user_id']);
+            $err_update_profile['phone_empty'] = empty($user['phone']);
+            $err_update_profile['phone_valid'] = !phoneValidation($user['phone']);
+            $err_update_profile['phone_used'] = !phoneAvailable($user['phone'], $user['user_id']);
+            $err_update_profile['email_empty'] = empty($user['email']);
+            $err_update_profile['email_valid'] = !emailValidation($user['email']);
+            $err_update_profile['email_used'] = !emailAvailable($user['email'], $user['user_id']);
+            $err_result = false;
+            foreach($err_update_profile as $err_item) {
+                $err_result = $err_result || $err_item;
+            }
+    
+            /* Update user data in database if input data is valid */
+            if (!$err_result) {
+                /* Query to database */
+                $query = "UPDATE users SET ";
+                $query .= "user_login = '{$user['login']}', ";
+                $query .= "user_phone = '{$user['phone']}', ";
+                $query .= "user_email = '{$user['email']}' ";
+                $query .= "WHERE user_id = {$user['user_id']};";
+
+                $updateUser = mysqli_query($connection, $query);
+                validateQuery($updateUser);
+
+                header("Location: profile.php?source=info");
+            }
+        }
+    }
+    return $err_update_profile;
 }
 ?>

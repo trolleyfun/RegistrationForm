@@ -32,7 +32,24 @@ if (!isset($_SESSION['user_id'])) {
     </nav>
 
     <div class="container">
-        <?php editProfile(); ?>
+        <?php 
+        /* GET variable value */
+        if (isset($_GET['source'])) {
+            $source = $_GET['source'];
+        } else {
+            $source = "";
+        }
+
+        /* Display content according to GET variable value */
+        switch($source) {
+            case "info":
+                displayInfo("Изменения успешно сохранены");
+                break;
+            default:
+                editProfile();
+                break;
+        }
+        ?>
     </div>
     <!-- /.container -->
 </body>

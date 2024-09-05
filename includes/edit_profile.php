@@ -15,7 +15,7 @@
         <?php displayErrorMessage($err_edit_profile['email_empty'], "Это поле не может быть пустым"); ?>
         <?php displayErrorMessage($err_edit_profile['email_valid'], "Некорректный e-mail"); ?>
         <?php displayErrorMessage($err_edit_profile['email_used'], "Пользователь с таким e-mail уже существует. Используйте другой"); ?>
-        <button type="submit" name="edit_profile_btn" class="form-btn">Сохранить изменения</button>
+        <button type="submit" name="update_profile_btn" class="form-btn">Сохранить изменения</button>
     </form>
 </section>
 <!-- /#edit-profile -->
