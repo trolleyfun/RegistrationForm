@@ -59,6 +59,11 @@ nav {
     padding: 30px;
     border-radius: 10px;
 }
+#info {
+    background-color: #14b43c;
+    border: 4px solid #008000;
+    max-width: 600px;
+}
 .form-container {
     display: flex;
     flex-direction: column;
@@ -84,6 +89,8 @@ nav {
 }
 .info-msg {
     font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
 }
 .form-btn {
     background-color: var(--btn-color);
