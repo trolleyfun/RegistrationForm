@@ -359,14 +359,16 @@ function editProfile() {
 
             /* input data validation: false -> valid, true -> invalid */
             $err_edit_profile = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false];
-            $err_change_password = ['current_password_empty'=>false, 'new_password_empty'=>false, 'new_password_equal'=>false];
+            $err_edit_password = ['current_password_empty'=>false, 'current_password_valid'=>false, 'new_password_empty'=>false, 'new_password_equal'=>false];
 
             /* Update user in database */
             $err_edit_profile = updateProfile($user_id, $err_edit_profile);
+            /* Update user password in database */
+            $err_edit_password = updateUserPassword($user_id, $err_edit_password);
 
             /* Display Edit Profile Form and Change Password Form */
             include "includes/edit_profile.php";
-            include "includes/change_password.php";
+            include "includes/edit_password.php";
         }
     }
 }
@@ -419,10 +421,73 @@ function updateProfile($user_id, $err_update_profile) {
                 $updateUser = mysqli_query($connection, $query);
                 validateQuery($updateUser);
 
+                /* Display success message */
                 header("Location: profile.php?source=info");
             }
         }
     }
     return $err_update_profile;
+}
+
+/* Get user password from the form. If user put valid current password, update password of user with $user_id in database. Make input data validation and set error status in $err_update_password array. Return error status array */
+function updateUserPassword($user_id, $err_update_password) {
+    global $connection;
+
+    /* Change Password button is clicked */
+    if (isset($_POST['update_password_btn'])) {
+        /* Check is session is active and session parameters are valid. If session validation failed then user logout */
+        if (!sessionValidation()) {
+            header("Location: index.php?logout=true");
+        } else {
+            /* Get data from the form */
+            $user['user_id'] = $user_id;
+            $user['current_password'] = $_POST['current_password'];
+            $user['new_password_1'] = $_POST['new_password_1'];
+            $user['new_password_2'] = $_POST['new_password_2'];
+
+            /* Escape special characters (for sql queries) */
+            $user = escapeArray($user);
+
+            /* Get current user password from database */
+            $query = "SELECT user_password FROM users WHERE user_id = {$user['user_id']};";
+            $userPassword = mysqli_query($connection, $query);
+            validateQuery($userPassword);
+            if (!$row = mysqli_fetch_assoc($userPassword)) {
+                /* Logout if there are no users with such $user_id */
+                header("Location: index.php?logout=true");
+            } else {
+                /* Password from database */
+                $db_password = $row['user_password'];
+
+                /* Input data validation */
+                foreach($err_update_password as $key=>$value) {
+                    $err_update_password[$key] = false;
+                }
+                $err_update_password['current_password_empty'] = empty($user['current_password']);
+                $err_update_password['current_password_valid'] = !password_verify($user['current_password'], $db_password);
+                $err_update_password['new_password_empty'] = empty($user['new_password_1']);
+                $err_update_password['new_password_equal'] = ($user['new_password_1'] !== $user['new_password_2']);
+                $err_result = false;
+                foreach($err_update_password as $err_item) {
+                    $err_result = $err_result || $err_item;
+                }
+
+                /* Change user password in database if input data is valid */
+                if (!$err_result) {
+                    /* Password Hashing */
+                    $user['new_password_1'] = password_hash($user['new_password_1'], PASSWORD_BCRYPT);
+
+                    /* Update user password */
+                    $query = "UPDATE users SET user_password = '{$user['new_password_1']}' WHERE user_id = {$user['user_id']};";
+                    $changePassword = mysqli_query($connection, $query);
+                    validateQuery($changePassword);
+
+                    /* Display success message */
+                    header("Location: profile.php?source=info");
+                }
+            }
+        }
+    }
+    return $err_update_password;
 }
 ?>

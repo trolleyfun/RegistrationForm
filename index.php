@@ -12,7 +12,7 @@ userLogout();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход</title>
+    <title>Главная</title>
 
     <!-- User Styles -->
     <link rel="stylesheet" href="css/styles.css">
