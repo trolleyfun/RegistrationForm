@@ -29,6 +29,42 @@ function displayInfo($text) {
     include "includes/info_message.php";
 }
 
+/* Search for user of current session and return user's login. On failure return null */
+function getSessionLogin() {
+    global $connection;
+
+    /* Check if session is active */
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        return null;
+    } elseif (!isset($_SESSION['user_id'])) {
+        return null;
+    } else {
+        /* Get user id */
+        $user_id = $_SESSION['user_id'];
+
+        /* Escape special characters (for sql queries) */
+        $user_id = mysqli_real_escape_string($connection, $user_id);
+
+        /* user id validation */
+        if (!my_is_int($user_id)) {
+            return null;
+        } else {
+            /* Search for user with $user_id in database */
+            $query = "SELECT user_login FROM users WHERE user_id = {$user_id};";
+            $sessionLogin = mysqli_query($connection, $query);
+            validateQuery($sessionLogin);
+
+            /* Get user login */
+            if ($row = mysqli_fetch_assoc($sessionLogin)) {
+                $user_login = $row['user_login'];
+                return $user_login;
+            } else {
+                return null;
+            }
+        }
+    }
+}
+
 /* Escape special characters in array elements for using in sql queries */
 function escapeArray($array) {
     global $connection;

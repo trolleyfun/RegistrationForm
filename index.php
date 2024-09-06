@@ -33,7 +33,13 @@ userLogout();
         <?php 
         /* Check if user is authorized and display proper content */
         if (isset($_SESSION['user_id'])) {
-            displayInfo("Добро пожаловать!");
+            /* Get user login */
+            $session_login = getSessionLogin();
+            if (is_null($session_login)) {
+                $session_login = "Пользователь";
+            }
+            /* Display Welcome message */
+            displayInfo("Добро пожаловать, {$session_login}!");
         } else {
             userLogin(); 
         }
