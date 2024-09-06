@@ -195,7 +195,7 @@ function userRegistration() {
     global $connection;
 
     /* input data validation: false -> valid, true -> invalid */
-    $err_user_reg = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false, 'password_empty'=>false, 'password_equal'=>false];
+    $err_user_reg = ['login_empty'=>false, 'login_used'=>false, 'phone_empty'=>false, 'phone_valid'=>false, 'phone_used'=>false, 'email_empty'=>false, 'email_valid'=>false, 'email_used'=>false, 'password_empty'=>false, 'password_equal'=>false, 'captcha'=>false];
 
     /* Registration button is clicked */
     if (isset($_POST['signup_btn'])) {
@@ -205,6 +205,7 @@ function userRegistration() {
         $user['email'] = $_POST['email'];
         $user['password_1'] = $_POST['password_1'];
         $user['password_2'] = $_POST['password_2'];
+        $captcha_token = $_POST['smart-token'];
 
         /* Escape special characters (for sql queries) */
         $user = escapeArray($user);
@@ -223,6 +224,7 @@ function userRegistration() {
         $err_user_reg['email_used'] = !emailAvailable($user['email'], null);
         $err_user_reg['password_empty'] = empty($user['password_1']);
         $err_user_reg['password_equal'] = ($user['password_1'] !== $user['password_2']);
+        $err_user_reg['captcha'] = !checkCaptcha($captcha_token);
         $err_result = false;
         foreach($err_user_reg as $err_item) {
             $err_result = $err_result || $err_item;
