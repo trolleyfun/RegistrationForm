@@ -16,6 +16,9 @@ userLogout();
 
     <!-- User Styles -->
     <link rel="stylesheet" href="css/styles.css">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico">
 </head>
 <body>
     <nav>
