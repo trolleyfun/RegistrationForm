@@ -1,6 +1,6 @@
 <?php /* For function userRegistration() */ ?>
 <!-- Registration Section -->
-<section id="registration">
+<section id="registration" class="form-section">
     <h1>Регистрация</h1>
     <form action="" method="post" class="form-container">
         <input type="text" name="login" placeholder="Логин" class="form-input" required>

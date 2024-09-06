@@ -1,6 +1,6 @@
 <?php /* For function editProfile() */ ?>
 <!-- Edit Password Section -->
-<section id="edit-password">
+<section id="edit-password" class="form-section">
     <h1>Изменить пароль</h1>
     <form action="#edit-password" method="post" class="form-container">
         <input type="password" name="current_password" placeholder="Старый пароль" class="form-input" required>

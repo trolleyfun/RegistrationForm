@@ -1,6 +1,6 @@
 <?php /* For function editProfile() */ ?>
 <!-- Edit Profile Section -->
-<section id="edit-profile">
+<section id="edit-profile" class="form-section">
     <h1>Редактировать профиль</h1>
     <form action="" method="post" class="form-container">
         <input type="text" name="login" placeholder="Логин" class="form-input" value="<?=$login;?>" required>

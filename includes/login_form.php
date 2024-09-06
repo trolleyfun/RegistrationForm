@@ -1,6 +1,6 @@
 <?php /* For function userLogin() */ ?>
 <!-- Login Section -->
-<section id="login">
+<section id="login" class="form-section">
     <h1>Вход</h1>
     <form action="" method="post" class="form-container">
         <input type="text" name="phone_email" placeholder="Номер телефона или e-mail" class="form-input" required>
