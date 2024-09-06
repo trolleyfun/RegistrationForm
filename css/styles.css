@@ -83,6 +83,11 @@ nav {
     width: 100%;
     margin-top: 15px;
 }
+.smart-captcha {
+    height: 100px;
+    margin-top: 15px;
+    width: 100%;
+}
 .input-description {
     font-size: 0.9em;
     margin-top: 5px;

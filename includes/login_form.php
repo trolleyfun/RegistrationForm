@@ -9,6 +9,8 @@
         <?php displayErrorMessage($err_authorization, "Неверный номер телефона, e-mail или пароль"); ?>
         <input type="password" name="password" placeholder="Пароль" class="form-input" required>
         <?php displayErrorMessage($err_login['password'], "Это поле не может быть пустым"); ?>
+        <div id="captcha-container" class="smart-captcha" data-sitekey="ysc1_cFymAvA26EpfsFwY8HlBhyMDqnRQIgKjUgt7WSUTd49dc1f2"></div>
+        <?php displayErrorMessage($err_login['captcha'], "Проверка не пройдена"); ?>
         <button type="submit" name="login_btn" class="form-btn">Войти</button>
     </form>
 </section>

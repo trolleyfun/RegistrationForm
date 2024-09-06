@@ -1,4 +1,6 @@
 <?php
+const SMARTCAPTCHA_SERVER_KEY = "ysc2_cFymAvA26EpfsFwY8HlBADEpqknF2FeovKfwASs728a7b64b";
+
 /* Check if the query to database is successful. If not, intercept the program and display an error message. $result is output of mysqli_query() function */
 function validateQuery($result) {
     global $connection;
@@ -261,7 +263,7 @@ function userLogin() {
     global $connection;
 
     /* input data validation: false -> valid, true -> invalid */
-    $err_login = ['phone_email'=>false, 'password'=>false];
+    $err_login = ['phone_email'=>false, 'password'=>false, 'captcha'=>false];
     $err_authorization = false;
 
     /* Login button is clicked */
@@ -269,6 +271,7 @@ function userLogin() {
         /* Get data from the form */
         $login['phone_email'] = $_POST['phone_email'];
         $login['password'] = $_POST['password'];
+        $captcha_token = $_POST['smart-token'];
 
         /* Escape special characters (for sql queries) */
         $login = escapeArray($login);
@@ -280,6 +283,7 @@ function userLogin() {
         $err_authorization = false;
         $err_login['phone_email'] = empty($login['phone_email']);
         $err_login['password'] = empty($login['password']);
+        $err_login['captcha'] = !checkCaptcha($captcha_token);
         $err_result = false;
         foreach($err_login as $err_item) {
             $err_result = $err_result || $err_item;
@@ -489,5 +493,34 @@ function updateUserPassword($user_id, $err_update_password) {
         }
     }
     return $err_update_password;
+}
+
+/* Check if captcha validation is successful. $token is a parameter which is sent to user after captcha validation (the value of input tag with name="smart-token"). Return true on success or if http query failed, otherwise return false */
+function checkCaptcha($token) {
+    /* Query to server */
+    $ch = curl_init();
+    /* Arguments of query */
+    $args = http_build_query([
+        "secret" => SMARTCAPTCHA_SERVER_KEY,
+        "token" => $token
+    ]);
+    curl_setopt($ch, CURLOPT_URL, "https://smartcaptcha.yandexcloud.net/validate?{$args}");
+    /* Server will response with json-object */
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
+
+    $server_output = curl_exec($ch);
+    /* Check if query is successful */
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    /* If query failed, return true */
+    if ($httpcode !== 200) {
+        return true;
+    }
+
+    /* Get values from json-object */
+    $resp = json_decode($server_output);
+    return $resp->status === "ok";
 }
 ?>

@@ -35,5 +35,8 @@ if (isset($_SESSION['user_id'])) {
         <?php userRegistration(); ?>
     </div>
     <!-- /.container -->
+
+    <!-- Yandex Smart Captcha Script -->
+    <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
 </body>
 </html>
