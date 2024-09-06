@@ -19,7 +19,7 @@
         <?php displayErrorMessage($err_user_reg['password_empty'], "Это поле не может быть пустым"); ?>
         <?php displayErrorMessage($err_user_reg['password_equal'], "Пароли должны совпадать"); ?>
         <input type="password" name="password_2" placeholder="Повторите пароль" class="form-input" required>
-        <div id="captcha-container" class="smart-captcha" data-sitekey="ysc1_cFymAvA26EpfsFwY8HlBhyMDqnRQIgKjUgt7WSUTd49dc1f2"></div>
+        <div id="captcha-container" class="smart-captcha" data-sitekey="<?=SMARTCAPTCHA_CLIENT_KEY;?>"></div>
         <?php displayErrorMessage($err_user_reg['captcha'], "Проверка не пройдена"); ?>
         <button type="submit" name="signup_btn" class="form-btn">Зарегистрироваться</button>
     </form>

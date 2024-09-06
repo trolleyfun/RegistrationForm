@@ -1,5 +1,6 @@
 <?php
-const SMARTCAPTCHA_SERVER_KEY = "ysc2_cFymAvA26EpfsFwY8HlBADEpqknF2FeovKfwASs728a7b64b";
+const SMARTCAPTCHA_SERVER_KEY = "";
+const SMARTCAPTCHA_CLIENT_KEY = "";
 
 /* Check if the query to database is successful. If not, intercept the program and display an error message. $result is output of mysqli_query() function */
 function validateQuery($result) {
